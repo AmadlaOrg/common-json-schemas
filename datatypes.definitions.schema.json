@@ -11,7 +11,7 @@
       ]
     },
     "list_of_strings": {
-      "type": "arra",
+      "type": "array",
       "items": {"type": "string"},
       "uniqueItems": true
     },
