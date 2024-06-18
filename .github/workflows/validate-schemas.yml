@@ -13,10 +13,27 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Validate JSON schemas
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install -g ajv-cli
+
+    - name: Download JSON Schema draft-2020-12
+      run: curl -o draft-2020-12.json https://json-schema.org/draft/2020-12/schema
+
+    - name: Find schema files
+      id: find_schemas
+      run: echo "::set-output name=schemas::$(find $(pwd) -name '*.schema.json' | tr '\n' ',')"
+
+    - name: Find JSON files
+      id: find_jsons
+      run: echo "::set-output name=jsons::$(find $(pwd) -name '*.json' ! -name '*.schema.json' | tr '\n' ',')"
+
+    - name: Validate JSON Schemas
       uses: docker://orrosenblatt/validate-json-action:latest
       env:
-        INPUT_SCHEMA: |
-          $(find $(pwd) -name "*.schema.json" | tr '\n' ',')
-        INPUT_JSONS: |
-          $(find $(pwd) -name "*.json" ! -name "*.schema.json" | tr '\n' ',')
+        INPUT_SCHEMA: ${{ steps.find_schemas.outputs.schemas }}
+        INPUT_JSONS: ${{ steps.find_jsons.outputs.jsons }}
