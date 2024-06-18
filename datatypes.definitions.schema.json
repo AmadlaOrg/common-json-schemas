@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "id": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatype.definitions.schema.json",
-  "title": "Data Type Definitions Schema",
-  "description": "Defines the definitions of different special data type.",
+  "id": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json",
+  "title": "Data Types Definitions Schema",
+  "description": "Defines the definitions of different special data types.",
   "definitions": {
     "string_or_list": {
       "oneOf": [

@@ -1,0 +1,29 @@
+name: Validate JSON Schemas
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  validate-schemas:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install ajv-cli
+      run: npm install -g ajv-cli
+
+    - name: Validate JSON schemas
+      run: |
+        for file in $(find . -name "*.schema.json"); do
+          echo "Validating $file"
+          ajv validate -s $file -r "$file"
+        done
