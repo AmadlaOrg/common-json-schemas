@@ -13,17 +13,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-
-    - name: Install ajv-cli
-      run: npm install -g ajv-cli ajv
-
     - name: Validate JSON schemas
-      run: |
-        for file in $(find . -name "*.schema.json"); do
-          echo "Validating $file"
-          ajv compile -s "$file" -m https://json-schema.org/draft/2020-12/schema
-        done
+      uses: OrRosenblatt/validate-json-action@v1
+      with:
+        schemas: '**/*.schema.json'
