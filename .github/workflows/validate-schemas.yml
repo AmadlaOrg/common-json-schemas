@@ -25,5 +25,5 @@ jobs:
       run: |
         for file in $(find . -name "*.schema.json"); do
           echo "Validating $file"
-          ajv validate -s $file -r "$file"
+          ajv compile -s "$file"
         done
