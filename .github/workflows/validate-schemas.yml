@@ -19,14 +19,11 @@ jobs:
         node-version: '16'
 
     - name: Install ajv-cli
-      run: npm install -g ajv-cli
-
-    - name: Download JSON Schema draft-2020-12
-      run: curl -o draft-2020-12.json https://json-schema.org/draft/2020-12/schema
+      run: npm install -g ajv-cli ajv
 
     - name: Validate JSON schemas
       run: |
         for file in $(find . -name "*.schema.json"); do
           echo "Validating $file"
-          ajv compile -s "$file" --schema=draft-2020-12.json
+          ajv compile -s "$file" -m https://json-schema.org/draft/2020-12/schema
         done
