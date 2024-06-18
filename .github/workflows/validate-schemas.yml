@@ -13,27 +13,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
+    - name: Set up Go
+      uses: actions/setup-go@v4
       with:
-        node-version: '16'
+        go-version: '1.19' # Specify the required Go version
 
-    - name: Install dependencies
-      run: npm install -g ajv-cli
+    - name: Install jv
+      run: |
+        go install github.com/santhosh-tekuri/jsonschema/cmd/jv@latest
+        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
-    - name: Download JSON Schema draft-2020-12
-      run: curl -o draft-2020-12.json https://json-schema.org/draft/2020-12/schema
-
-    - name: Find schema files
-      id: find_schemas
-      run: echo "::set-output name=schemas::$(find $(pwd) -name '*.schema.json' | tr '\n' ',')"
-
-    - name: Find JSON files
-      id: find_jsons
-      run: echo "::set-output name=jsons::$(find $(pwd) -name '*.json' ! -name '*.schema.json' | tr '\n' ',')"
-
-    - name: Validate JSON Schemas
-      uses: docker://orrosenblatt/validate-json-action:latest
-      env:
-        INPUT_SCHEMA: ${{ steps.find_schemas.outputs.schemas }}
-        INPUT_JSONS: ${{ steps.find_jsons.outputs.jsons }}
+    - name: Validate JSON schemas
+      run: |
+        for file in $(find . -name "*.schema.json"); do
+          echo "Validating $file"
+          jv $file
+        done
