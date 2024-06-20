@@ -4,6 +4,10 @@
   "title": "Data Types Definitions Schema",
   "description": "Defines the definitions of different special data types.",
   "definitions": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]*$"
+    },
     "string_or_list": {
       "oneOf": [
         {"type": "string"},
