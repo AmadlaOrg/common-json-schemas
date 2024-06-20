@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/utils.definitions.schema.json",
+  "title": "Utils Definition Schema",
+  "description": "Defines the definitions of different util schemas.",
+  "definitions": {
+    "secret": {
+      "id": "#/definitions/secret",
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "environment": {"type": "string"},
+        "file": {"type": "string"},
+        "external": {
+          "type": ["boolean", "object"],
+          "properties": {
+            "name": {"type": "string"}
+          }
+        },
+        "labels": {
+          "$ref": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json#/definitions/list_or_dict"
+        },
+        "driver": {"type": "string"},
+        "driver_opts": {
+          "type": "object",
+          "patternProperties": {
+            "^.+$": {"type": ["string", "number"]}
+          }
+        },
+        "template_driver": {"type": "string"}
+      },
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}
+    },
+
+    "config": {
+      "id": "#/definitions/config",
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "content": {"type": "string"},
+        "environment": {"type": "string"},
+        "file": {"type": "string"},
+        "external": {
+          "type": ["boolean", "object"],
+          "properties": {
+            "name": {
+              "deprecated": true,
+              "type": "string"
+            }
+          }
+        },
+        "labels": {
+          "$ref": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json#/definitions/list_or_dict"
+        },
+        "template_driver": {"type": "string"}
+      },
+      "additionalProperties": false,
+      "patternProperties": {"^x-": {}}
+    },
+
+    "command": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string"},
+        {"type": "array","items": {"type": "string"}}
+      ]
+    },
+
+    "env_file": {
+      "oneOf": [
+        {"type": "string"},
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {"type": "string"},
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  },
+                  "required": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
