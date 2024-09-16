@@ -1,23 +1,35 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "id": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json",
+  "$id": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json",
   "title": "Data Types Definitions Schema",
   "description": "Defines the definitions of different special data types.",
-  "definitions": {
+  "$defs": {
     "name": {
       "type": "string",
-      "pattern": "^[a-zA-Z0-9_-]*$"
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "A non-empty string containing only letters, numbers, underscores, or hyphens."
     },
     "string_or_list": {
       "oneOf": [
-        {"type": "string"},
-        {"$ref": "#/definitions/list_of_strings"}
-      ]
+        {
+          "type": "string",
+          "description": "A single string value."
+        },
+        {
+          "$ref": "#/$defs/list_of_strings",
+          "description": "A list of unique strings."
+        }
+      ],
+      "description": "A data type that can be either a single string or a list of unique strings."
     },
     "list_of_strings": {
       "type": "array",
-      "items": {"type": "string"},
-      "uniqueItems": true
+      "items": {
+        "type": "string",
+        "description": "Each item in the array must be a string."
+      },
+      "uniqueItems": true,
+      "description": "An array of unique strings."
     },
     "list_or_dict": {
       "oneOf": [
@@ -25,13 +37,24 @@
           "type": "object",
           "patternProperties": {
             ".+": {
-              "type": ["string", "number", "boolean", "null"]
+              "type": ["string", "number", "boolean", "null"],
+              "description": "Values can be strings, numbers, booleans, or null."
             }
           },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "An object where each key is a non-empty string and each value is a string, number, boolean, or null."
         },
-        {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
-      ]
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Each item in the array must be a string."
+          },
+          "uniqueItems": true,
+          "description": "An array of unique strings."
+        }
+      ],
+      "description": "A data type that can be either a dictionary with specific value types or a list of unique strings."
     }
   }
 }
