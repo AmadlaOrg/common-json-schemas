@@ -1,100 +1,168 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "id": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/utils.definitions.schema.json",
+  "$id": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/utils.definitions.schema.json",
   "title": "Utils Definition Schema",
   "description": "Defines the definitions of different util schemas.",
-  "definitions": {
+  "$defs": {
     "secret": {
-      "id": "#/definitions/secret",
+      "$id": "#/$defs/secret",
       "type": "object",
       "properties": {
-        "name": {"type": "string"},
-        "environment": {"type": "string"},
-        "file": {"type": "string"},
-        "external": {
-          "type": ["boolean", "object"],
-          "properties": {
-            "name": {"type": "string"}
-          }
+        "name": {
+          "type": "string",
+          "description": "The name of the secret."
         },
-        "labels": {
-          "$ref": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json#/definitions/list_or_dict"
+        "environment": {
+          "type": "string",
+          "description": "The environment where the secret is used."
         },
-        "driver": {"type": "string"},
-        "driver_opts": {
-          "type": "object",
-          "patternProperties": {
-            "^.+$": {"type": ["string", "number"]}
-          }
+        "file": {
+          "type": "string",
+          "description": "Path to the secret file."
         },
-        "template_driver": {"type": "string"}
-      },
-      "additionalProperties": false,
-      "patternProperties": {"^x-": {}}
-    },
-
-    "config": {
-      "id": "#/definitions/config",
-      "type": "object",
-      "properties": {
-        "name": {"type": "string"},
-        "content": {"type": "string"},
-        "environment": {"type": "string"},
-        "file": {"type": "string"},
         "external": {
           "type": ["boolean", "object"],
           "properties": {
             "name": {
-              "deprecated": true,
-              "type": "string"
+              "type": "string",
+              "description": "Name of the external resource."
             }
-          }
+          },
+          "required": ["name"],
+          "description": "Indicates whether the secret is external and provides details if applicable."
         },
         "labels": {
-          "$ref": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json#/definitions/list_or_dict"
+          "$ref": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json#/$defs/list_or_dict",
+          "description": "Labels associated with the secret."
         },
-        "template_driver": {"type": "string"}
+        "driver": {
+          "type": "string",
+          "description": "The driver to use for the secret."
+        },
+        "driver_opts": {
+          "type": "object",
+          "patternProperties": {
+            "^.+$": {
+              "type": ["string", "number"],
+              "description": "Driver options as key-value pairs."
+            }
+          },
+          "additionalProperties": false,
+          "description": "Options for the secret driver."
+        },
+        "template_driver": {
+          "type": "string",
+          "description": "The template driver to use."
+        }
       },
+      "required": ["name"],
       "additionalProperties": false,
-      "patternProperties": {"^x-": {}}
+      "patternProperties": {
+        "^x-": {
+          "type": "string",
+          "description": "Custom properties starting with 'x-'."
+        }
+      }
+    },
+
+    "config": {
+      "$id": "#/$defs/config",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the configuration."
+        },
+        "content": {
+          "type": "string",
+          "description": "The content of the configuration."
+        },
+        "environment": {
+          "type": "string",
+          "description": "The environment where the configuration is applied."
+        },
+        "file": {
+          "type": "string",
+          "description": "Path to the configuration file."
+        },
+        "external": {
+          "type": ["boolean", "object"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "deprecated": true,
+              "description": "Name of the external configuration resource."
+            }
+          },
+          "required": ["name"],
+          "description": "Indicates whether the configuration is external and provides details if applicable."
+        },
+        "labels": {
+          "$ref": "https://raw.githubusercontent.com/AmadlaOrg/common-json-schemas/master/datatypes.definitions.schema.json#/$defs/list_or_dict",
+          "description": "Labels associated with the configuration."
+        },
+        "template_driver": {
+          "type": "string",
+          "description": "The template driver to use."
+        }
+      },
+      "required": ["name"],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": {
+          "type": "string",
+          "description": "Custom properties starting with 'x-'."
+        }
+      }
     },
 
     "command": {
-      "oneOf": [
-        {"type": "null"},
-        {"type": "string"},
-        {"type": "array","items": {"type": "string"}}
-      ]
+      "type": "object",
+      "properties": {
+        "command": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ],
+          "description": "Command to execute, can be null, a single string, or an array of strings."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Defines a command that can be executed."
     },
 
     "env_file": {
-      "oneOf": [
-        {"type": "string"},
-        {
-          "type": "array",
-          "items": {
-            "oneOf": [
-              {"type": "string"},
-              {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "path": {
-                    "type": "string"
-                  },
-                  "required": {
-                    "type": "boolean",
-                    "default": true
+      "type": "object",
+      "properties": {
+        "env_file": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  { "type": "string" },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "path": { "type": "string", "description": "Path to the environment file." },
+                      "required": { "type": "boolean", "default": true, "description": "Indicates if the environment file is required." }
+                    },
+                    "required": ["path"],
+                    "additionalProperties": false,
+                    "description": "Detailed information about the environment file."
                   }
-                },
-                "required": [
-                  "path"
                 ]
-              }
-            ]
-          }
+              },
+              "description": "A list of environment files, each can be a string or an object with detailed info."
+            }
+          ],
+          "description": "Environment file paths or detailed configurations."
         }
-      ]
+      },
+      "additionalProperties": false,
+      "description": "Defines environment file configurations."
     }
   }
 }
